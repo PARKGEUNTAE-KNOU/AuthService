@@ -5,7 +5,7 @@ import app.auth.login.dto.LoginResponse;
 import app.auth.login.dto.LoginResult;
 import app.auth.login.service.LoginService;
 import app.auth.session.service.SessionService;
-import app.common.ApiResponse;
+import com.hms.util.api.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,17 +40,17 @@ public class LoginController {
             sessionService.addAuthCookie(response, loginResult.getResponse().getAccessToken());
             sessionService.addRefreshCookie(response, loginResult.getRefreshToken());
 
-            return ResponseEntity.ok(new ApiResponse<LoginResponse>().ok(loginResult.getResponse()));
+            return ResponseEntity.ok(ApiResponse.ok(loginResult.getResponse()));
         } catch (BadCredentialsException e) {
             sessionService.clearAuthCookie(response);
             sessionService.clearRefreshCookie(response);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse<LoginResponse>().error("AUTH_INVALID_CREDENTIALS"));
+                    .body(ApiResponse.error("AUTH_INVALID_CREDENTIALS"));
         } catch (AccessDeniedException e) {
             sessionService.clearAuthCookie(response);
             sessionService.clearRefreshCookie(response);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse<LoginResponse>().error(e.getMessage()));
+                    .body(ApiResponse.error(e.getMessage()));
         }
     }
 
@@ -63,17 +63,17 @@ public class LoginController {
             sessionService.addAuthCookie(response, loginResult.getResponse().getAccessToken());
             sessionService.addRefreshCookie(response, loginResult.getRefreshToken());
 
-            return ResponseEntity.ok(new ApiResponse<LoginResponse>().ok(loginResult.getResponse()));
+            return ResponseEntity.ok(ApiResponse.ok(loginResult.getResponse()));
         } catch (BadCredentialsException e) {
             sessionService.clearAuthCookie(response);
             sessionService.clearRefreshCookie(response);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse<LoginResponse>().error(e.getMessage()));
+                    .body(ApiResponse.error(e.getMessage()));
         } catch (AccessDeniedException e) {
             sessionService.clearAuthCookie(response);
             sessionService.clearRefreshCookie(response);
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ApiResponse<LoginResponse>().error(e.getMessage()));
+                    .body(ApiResponse.error(e.getMessage()));
         }
     }
 
